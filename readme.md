@@ -72,7 +72,7 @@ def sentence_fn(test_data):
 
 ##### embedding_and_attention_mask_fn
 
-**适用于仅在embedding层之后加入的soft prompt**，通过操作embedding layer得到的表征和对应的attention_mask并按相同顺序返回，其出现在RobertaEmbedding和RobertaEncoder层之间。见下例：
+**适用于仅在embedding层之后加入的soft prompt**，见下例：
 
 ```python
  def embedding_and_attention_mask_fn(embedding, attention_mask):
@@ -109,7 +109,7 @@ def sentence_fn(test_data):
 
 ##### task_name
 
-['SNLI', 'SST-2', 'MRPC', 'AGNews', 'Yelp', 'TREC']中的一个，需要与测试文件路径匹配
+['DBPedia', 'QNLI', 'QQP', 'SNLI', 'SST-2']中的一个，需要与测试文件路径匹配
 
 
 
