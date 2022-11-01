@@ -18,6 +18,18 @@ def sentence_fn_factory(task_name):
     if task_name == 'SST-2':
         def sentence_fn(test_data):
             return prompt_initialization + ' . ' + test_data + f' . It was {config.mask_token} .'
+    elif task_name == 'SNLI':
+        def sentence_fn(test_data):
+            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
+    elif task_name == 'DBPedia':
+        def sentence_fn(test_data):
+            return prompt_initialization + ' . ' + test_data + f' . It was {config.mask_token} .'
+    elif task_name == 'QNLI':
+        def sentence_fn(test_data):
+            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
+    elif task_name == 'QQP':
+        def sentence_fn(test_data):
+            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
     else:
         raise NotImplementedError
 
@@ -25,13 +37,46 @@ def sentence_fn_factory(task_name):
 
 
 verbalizer_dict = {
-    'SST-2': ["bad", "great"],
+    'SST-2': [
+        "bad",
+        "great"
+    ],
+    'SNLI': [
+        "Yes",
+        "Maybe",
+        "No"
+    ],
+    'DBPedia': [
+        "Company",
+        "EducationalInstitution",
+        "Artist",
+        "Athlete",
+        "OfficeHolder",
+        "MeanOfTransportation",
+        "Building",
+        "NaturalPlace",
+        "Village",
+        "Animal",
+        "Plant",
+        "Album",
+        "Film",
+        "WrittenWork"
+    ],
+    'QNLI': [
+        "entailment",
+        "not_entailment"
+    ],
+    'QQP': [
+        "Yes",
+        "No"
+    ],
 }
 
 device = 'cuda:0'
 
 for task_name in config.tasks.keys():
-    for seed in config.tasks[task_name]:
+    # for seed in config.tasks[task_name]:
+    for seed in [8]:
         torch.manual_seed(seed)
         np.random.seed(seed)
         sentence_fn = sentence_fn_factory(task_name)
