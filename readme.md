@@ -9,7 +9,7 @@ conda create --name bbt python=3.8
 conda activate bbt
 pip install transformers==4.1.1
 pip install datasets
-pip install fastNLP
+pip install fastNLP==0.7.0
 pip install cma
 pip install sklearn
 pip install cryptography
@@ -20,7 +20,7 @@ pip install cryptography
 Now you can run Black-Box Tuning with the following code:
 
 ```bash
-python bbt.py --seed 42 --task_name 'sst2'
+python bbt.py --seed 8 --task_name 'SST-2'
 ```
 
 Then the best prompt will be saved to `./results`.

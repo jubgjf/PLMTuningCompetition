@@ -1,48 +1,48 @@
-People using an outdoor ice skating rink.	The people are on a plane.	Contradiction
-A girl drinks a beverage while sitting on a bench.	A girl is at a table eating a hamburger with her parents.	Contradiction
-A little girl on a couch holding an infant.	A girl holds her sister.	Neutral
-Baseball player Melky Cabrera wearing number 53 jersey standing behind home plate looks on as his team rounds home behind the catcher.	The baseball team is at the zoo.	Contradiction
-A man in black and white is holding a torch in front of a crowd.	The man is holding a cellphone.	Contradiction
-An asian child in a baseball cap crying while he is being held	A person is holding an upset child.	Entailment
-An oddly dressed man wearing a plaid skirt and knee-high black boots stands is in the middle of a crowded area.	Man stands in front of crowd	Entailment
-A woman sitting in a rowboat	Woman wearing a life vest.	Neutral
-A band is playing the bagpipes while a man jogs by wearing all black	This band is made of dogs	Contradiction
-There are a variety of produce goods at a market.	The market carries organic vegetables.	Neutral
-An ice cream truck with an open door is driving through a residential neighborhood.	A truck with an open door is driving through a residential neighborhood.	Entailment
-A young woman in a denim skit waking in front of a garage.	The woman is wearing a skirt.	Entailment
-a child in a black shirt reaches for a white kitchen stove	An Asian child reaches for the stove.	Neutral
-A small child standing in the grass watching a band playing at an outdoor event.	The child was watching the band march through the local park	Neutral
-A soccer player in a yellow jersey heads a soccer ball while a player in an orange jersey is in close pursuit.	The women are swimming in a lake.	Contradiction
-A homeless person setting up his belongings on the street corner.	A lawyer is driving her car.	Contradiction
-A man is being held by two men wearing security uniforms, while standing outside in front of a sign advertising for Samsung.	Samsung is looking for some man.	Contradiction
-A man with a beard carrying chopped wood.	A sad man with a beard carrying chopped wood.	Neutral
-A group of people are outside next to a house with a straw roof.	The group of humans are outside.	Entailment
-A young kid in a dark blue sweater and yellow pants is skiing over ice that is on top of green grass.	a kid is practicing for a ski event	Neutral
-A few people are observing the orange juice section at the grocery store.	The people like orange juice.	Neutral
-A man pulling a small boat across some water.	the man went to go get the boat that had floated away	Neutral
-Little boy in a red shirt looking over the window ledge of a train car.	The little boy in a red shirt is taking a train ride.	Entailment
-A man on a three-wheeled motorcycle driving down a brick sidewalk in front of an exhibition hall.	A man is riding a motorcycle all by himself.	Entailment
-A little girl packed and going somewhere.	A boy packs for summer camp.	Contradiction
-Two people sunbathe beside water.	They are by a pool.	Neutral
-A little boy skateboarder is doing a trick on his board while another young skateboarder watches.	A boy teaching a skateboarding trick to a friend.	Neutral
-A girl who looks upset with her arms crossed.	An upset girl	Entailment
-A child is looking at his bicycle wearing shirt, pants and shoes.	A child is wearing only his diaper outside.	Contradiction
-A bunch of people walking on the side of a street.	People lying down on the side of the road in protest.	Contradiction
-A black man in a yellow shirt and hat playing guitar at a live show.	He is performing at a local festival.	Neutral
-A black dog frolics in the snow.	Dog playing in snow	Entailment
-A football player being tackled from behind by another player from a different team in front of a crowd.	a player is tackled	Entailment
-A boy in yellow trunks kneels at the ocean's edge.	A boy wearing yellow trunks contemplates swimming at the ocean's edge	Neutral
-A small boy is holding a basketball in position to throw it into a hoop on a game.	A small boy is dribbling against three defenders	Contradiction
-Asian woman holding a cray stuffed cat in a classroom.	A woman holds a stuffed cat.	Entailment
-A soccer player kicks a ball.	A person wearing yellow shorts kicks the ball.	Neutral
-The little girl is riding her red scooter.	The little girs have scooter.	Entailment
-A woman with a blue shirt and hoop earrings.	A nude woman lays on a beach.	Contradiction
-An African-American man gestures with one hand while speaking into a microphone.	The man is giving a speech.	Entailment
-Three men, one on a ladder, work on a roof.	The men are laying in a pool.	Contradiction
-Two women competing in a all women basketball game.	A woman shoots a basketball into the hoop, winning the game.	Neutral
-A fuzzy white lap dog runs along a rocky beach.	A dog runs across the beach.	Entailment
-Six people riding a roller coaster.	The people riding are friends.	Neutral
-A woman holding her coat on her lap, perhaps riding on the subway.	A woman is taking a ride.	Entailment
-Man cheering a friend with beers.	man at auditorium	Contradiction
-A man in a hat and coat is holding a pitchfork and posing for a picture.	A man is posing for a picture	Entailment
-A man is sitting at a laptop, while two men (one sitting, one standing up) face each other in the background.	The man cannot find his laptop.	Contradiction
+A person with white hair wearing a long red robe standing in front of a large brick wall .	A man with white hair wearing a long red robe standing in front of a large brick wall .	Neutral
+A person jumps off the sidewalk on their skateboard .	A person jumping off the boat into the water	Contradiction
+An almost empty subway terminal .	A full building .	Contradiction
+A Pride softball team member hits the ball and runs towards first base while the umpire and catcher watch the ball .	A Pride softball team member hits the ball and runs towards first base while the umpire and catcher watch the ball go over the fence .	Neutral
+A man reading the paper waiting to get on subway .	A man catches up on the headlines before going to work .	Neutral
+A woman helps a young girl in a classroom .	A person helps a young girl in a classroom .	Entailment
+One man fixes the tire of his car while a man in an orange jacket takes a picture .	A man is photographing his friend while he fixes his car to show people how to fix a car .	Neutral
+Adjusting a tie for accuracy .	Hemming a dress .	Contradiction
+In a crowd at a stadium , one man is standing up by himself with his arms up over his head like he 's doing the Wave .	In a crowd at a football game , one man is standing up by himself with his arms up over his head like he 's doing the wave	Neutral
+Five men , uniformly dressed in white shirts , tie and black slacks converse at the back of an open van .	Two coworkers are discussing their day at work while they sit on the back of an open van .	Neutral
+Man attempting to fix something .	A woman bakes cookies .	Contradiction
+A gray dog is yawning .	A gray dog is sleeping .	Contradiction
+a little girl holing flowers .	a girl is holding flowers	Entailment
+Two girls are playing softball .	Girls play softball .	Entailment
+A man and woman wearing backpacks are standing near a tall tree stump with a stone wall in the background .	A man and woman wearing backpacks are standing near a tall tree stump with a stone wall in the background looking at a waterfall .	Neutral
+A woman , dressed in a gold suit , is smiling as she stands in front of an open door .	A woman wearing a gold suit has just received great news from her husband , so she 's smiling .	Neutral
+Young child shoots basketball .	The child is playing soccer .	Contradiction
+People are unloading supplies .	The people are working .	Entailment
+Tourists examine a sign .	People read a sign .	Entailment
+Man on bike in mountains	Nobody is on a bike	Contradiction
+A boy dressed for Halloween	A girl dressed for church .	Contradiction
+Children climbing statue .	Kids are climbing	Entailment
+Someone climbs a rocks .	A person is outside	Entailment
+A man wakeboarding	the person is skateboarding	Contradiction
+A black dog in water .	The dog is swimming .	Entailment
+A waterskier performs tricks .	A waterskier wrecks horrifically .	Contradiction
+Three brown-haired women in brown and green skirts lean against a metal fence staring to the left .	Three brown-haired women in brown and green skirts lean against a metal fence staring at a handsome man passing by .	Neutral
+Woman being recorded .	Woman is not being recorded .	Contradiction
+Young male outside cleaning windows .	Young woman inside cleaning windows .	Contradiction
+An Asian chef makes kabobs .	An American chef makes kebabs .	Contradiction
+Mother playing with her daughter	There are two people sleeping .	Contradiction
+A woman wearing a white hat and shirt is jogging down a street with a plant store on the corner .	There are a lot of men ogling at this jogging woman due to her wearing a white shirt .	Neutral
+A woman with long blond-hair talks on a mobile phone .	A woman in a black dress is on the phone .	Neutral
+A guy on a city electric pole watching over .	The man on the telephone pole is taking a nap .	Contradiction
+Four children are playing outside .	Some kids play outdoors .	Entailment
+A man in a black suit knocks his head with his fist as he puts his arm around a woman in a white strapless dress .	A white man in a black suit knocks his head with his fist to kill a bug as he puts his arm around a white woman in a white strapless dress and high heels .	Neutral
+Wrestlers locked in competition	An empty stage	Contradiction
+Firemen standing on a lift .	The fireman are standing .	Entailment
+Three men are at a buss stop , two on the ends of the bench are dressed in tan , the middle man is wearing a black suit and is talking .	Three men are at a buss stop , two on the ends of the bench are dressed in tan , the middle man is wearing a black suit and is talking on his cell phone .	Neutral
+A woman wearing a red scarf , blue sweater and jeans is sitting alone , cross legged amidst a series of stone or concrete blocks .	A woman wearing a red scarf , blue sweater and jeans is sitting alone awaiting something exciting to happen .	Neutral
+3 women cooking in a kitchen .	Multiple people are cooking indoors .	Entailment
+Two people on a bench .	Two people on a bench	Entailment
+A small white dog runs .	A small dog is running .	Entailment
+some young men playing basketball	Basketball is being played .	Entailment
+A white-haired , bearded man stands leans against a low wall next to a red cylinder reading `` clearance . ''	A white haired man with a beard is leaning against a low wall to take something from the red cylinder .	Neutral
+People sitting down to eat .	People are about to eat .	Entailment
+A man with salt and pepper hair , in a quasi crew cut style , wearing a black tank top is just ahead of a group of people behind him on a sidewalk or street .	A person with salt and pepper hair , wearing a black tank top is just ahead of a group of people on a sidewalk or street .	Neutral
+a woman is receiving help from the female behind the counter .	A woman getting help from another woman at a store .	Entailment
