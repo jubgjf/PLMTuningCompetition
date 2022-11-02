@@ -7,10 +7,12 @@ Baseline code is in bbt.py
 
 import os
 import torch
-from test_api import test_api, tokenizer
+from test_api import test_api
 import numpy as np
 import csv
 from config import config
+
+tokenizer = config.tokenizer
 
 
 def sentence_fn_factory(task_name):
