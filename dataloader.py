@@ -2,7 +2,8 @@ import datasets
 from fastNLP import DataSet, Instance
 from fastNLP.io import Loader, DataBundle
 from functools import partial
-from transformers import RobertaTokenizer
+
+from config import config
 
 
 # 从huggingface datasets脚本中读取数据
@@ -39,10 +40,7 @@ def convert_to_features(example_batch, tokenizer):
 class SST2Loader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        if tokenizer is None:
-            self.tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = config.tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "bad",
@@ -92,10 +90,7 @@ class SST2Loader(Loader):
 class SNLILoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        if tokenizer is None:
-            self.tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = config.tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "Yes",
@@ -147,10 +142,7 @@ class SNLILoader(Loader):
 class DBPediaLoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        if tokenizer is None:
-            self.tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = config.tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "Company",
@@ -211,10 +203,7 @@ class DBPediaLoader(Loader):
 class QNLILoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        if tokenizer is None:
-            self.tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = config.tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "entailment",
@@ -264,10 +253,7 @@ class QNLILoader(Loader):
 class QQPLoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        if tokenizer is None:
-            self.tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = config.tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "Yes",

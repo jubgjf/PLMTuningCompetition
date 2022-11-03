@@ -3,7 +3,6 @@ import torch.nn as nn
 from fastNLP.core.metrics import MetricBase
 from fastNLP.core.utils import _get_func_signature
 from sklearn.metrics import accuracy_score
-from transformers import RobertaTokenizer
 from utils import hinge_loss
 
 
@@ -17,8 +16,6 @@ class TaskMetric(MetricBase):
         self.ce_loss = 0.0
         self.ce_fct = nn.CrossEntropyLoss(reduction='sum')
         self.margin = 2
-        if tokenizer is None:
-            tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
         self.label_map = {}
 
     def evaluate(self, pred, target, seq_len=None):
