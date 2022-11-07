@@ -2,24 +2,27 @@ import argparse
 import os
 import random
 import time
+
 import cma
 import numpy as np
 import torch
+
+import test_api
 from config import config
 from dataloader import SST2Loader, SNLILoader, DBPediaLoader, QNLILoader, QQPLoader
-from metrics import SST2Metric, SNLIMetric, DBPediaMetric, QNLIMetric, QQPMetric
 from forward_api import LMForwardAPI
+from metrics import SST2Metric, SNLIMetric, DBPediaMetric, QNLIMetric, QQPMetric
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--task_name", default='SST-2', type=str)
-parser.add_argument("--intrinsic_dim", default=500, type=int)
-parser.add_argument("--budget", default=8000, type=int)
-parser.add_argument("--popsize", default=20, type=int)
+parser.add_argument("--task_name", default='QQP', type=str)
+parser.add_argument("--intrinsic_dim", default=32, type=int)
+parser.add_argument("--budget", default=800, type=int)
+parser.add_argument("--popsize", default=5, type=int)
 parser.add_argument("--bound", default=0, type=int)
 parser.add_argument("--sigma", default=1, type=float)
-parser.add_argument("--print_every", default=50, type=int)
-parser.add_argument("--eval_every", default=100, type=int)
-parser.add_argument("--device", default='cuda:0', type=str)
+parser.add_argument("--print_every", default=5, type=int)
+parser.add_argument("--eval_every", default=5, type=int)
+parser.add_argument("--device", default='cuda', type=str)
 parser.add_argument("--alg", default='CMA', type=str)
 parser.add_argument("--random_proj", default='normal', type=str)
 parser.add_argument("--seed", default=8, type=int)
@@ -72,7 +75,6 @@ cat_or_add = args.cat_or_add
 parallel = args.parallel
 inference_framework = args.inference_framework
 onnx_model_path = args.onnx_model_path
-
 if inference_framework not in ['pt', 'ort']:
     raise ValueError(f'inference_framework only supports "pt", "ort", got `{inference_framework}` instead.')
 if inference_framework == 'ort':
@@ -126,13 +128,15 @@ print(dev_data[0])
 train_data = {
     'input_ids': torch.tensor(train_data['input_ids'].get(list(range(len(train_data))))),
     'attention_mask': torch.tensor(train_data['attention_mask'].get(list(range(len(train_data))))),
-    'mask_pos': torch.tensor(train_data['mask_pos'].get(list(range(len(train_data))))),
+    'decoder_input_ids': torch.tensor(train_data['decoder_input_ids'].get(list(range(len(train_data))))),
+    'decoder_attention_mask': torch.tensor(train_data['decoder_attention_mask'].get(list(range(len(train_data))))),
     'labels': torch.tensor(train_data['labels'].get(list(range(len(train_data))))),
 }
 dev_data = {
     'input_ids': torch.tensor(dev_data['input_ids'].get(list(range(len(dev_data))))),
     'attention_mask': torch.tensor(dev_data['attention_mask'].get(list(range(len(dev_data))))),
-    'mask_pos': torch.tensor(dev_data['mask_pos'].get(list(range(len(dev_data))))),
+    'decoder_input_ids': torch.tensor(dev_data['decoder_input_ids'].get(list(range(len(dev_data))))),
+    'decoder_attention_mask': torch.tensor(dev_data['decoder_attention_mask'].get(list(range(len(dev_data))))),
     'labels': torch.tensor(dev_data['labels'].get(list(range(len(dev_data))))),
 }
 
@@ -142,8 +146,8 @@ model_forward_api = LMForwardAPI(
     n_prompt_tokens=n_prompt_tokens,
     task_name=task_name,
     loss_type=loss_type,
-    init_prompt_path=init_prompt_path,
     device=device,
+    save_model_path=f'./results/{task_name}/{seed}/best_model',
     inference_framework=inference_framework,
     onnx_model_path=onnx_model_path,
     cat_or_add=cat_or_add,
@@ -174,12 +178,17 @@ if parallel:
 
 # opt = cma.CMAOptions()
 start_time = time.time()
+embedding_and_attention_mask_fn = lambda x, y: (x, y)
+hidden_states_and_attention_mask_fn = lambda i, x, y: (x, y)
 while not es.stop():
     solutions = es.ask()
     if parallel:
-        fitnesses = model_forward_api.eval(solutions)
+        fitnesses = model_forward_api.eval(solutions, embedding_and_attention_mask_fn=embedding_and_attention_mask_fn,
+                                           hidden_states_and_attention_mask_fn=hidden_states_and_attention_mask_fn)
     else:
-        fitnesses = [model_forward_api.eval(x) for x in solutions]
+        fitnesses = [model_forward_api.eval(x, embedding_and_attention_mask_fn=embedding_and_attention_mask_fn,
+                                            hidden_states_and_attention_mask_fn=hidden_states_and_attention_mask_fn) for
+                     x in solutions]
     es.tell(solutions, fitnesses)
     # es.logger.add()  # write data to disc to be plotted
     # es.disp()
@@ -188,7 +197,7 @@ print('Done. Elapsed time: {} (mins)'.format((end_time - start_time) / 60))
 if not os.path.exists(f'./results/{task_name}/{seed}'):
     os.makedirs(f'./results/{task_name}/{seed}')
 
-torch.save(model_forward_api.linear(torch.tensor(model_forward_api.best_prompt, dtype=torch.float32)),
-           f=f'./results/{task_name}/{seed}/best.pt')
+torch.save(torch.tensor(model_forward_api.best_prompt, dtype=torch.float32),
+           f=f'./results/{task_name}/{seed}/best_prompt.pt')
 
 # fitlog.finish()

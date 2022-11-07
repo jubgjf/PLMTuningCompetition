@@ -2,9 +2,7 @@ import datasets
 from fastNLP import DataSet, Instance
 from fastNLP.io import Loader, DataBundle
 from functools import partial
-
-from config import config
-
+from modeling_tokenizer import T5Tokenizer
 
 # 从huggingface datasets脚本中读取数据
 def load_hf_dataset(task_name: str = 'SST-2', seed: int = 8, split: str = 'train') -> datasets.Dataset:
@@ -23,15 +21,13 @@ def load_hf_dataset(task_name: str = 'SST-2', seed: int = 8, split: str = 'train
 
 def convert_to_features(example_batch, tokenizer):
     input_encodings = tokenizer.batch_encode_plus(example_batch['input_text'])
-    target_encodings = tokenizer.batch_encode_plus(example_batch['target_text'], add_special_tokens=False)
-    mask_pos = []
-    for input_ids in input_encodings['input_ids']:
-        mask_pos.append(input_ids.index(tokenizer.mask_token_id))
+    target_encodings = tokenizer.batch_encode_plus(example_batch['target_text'], pad_to_max_length=True, max_length=8)
+
     encodings = {
         'input_ids': input_encodings['input_ids'],
         'attention_mask': input_encodings['attention_mask'],
-        'mask_pos': mask_pos,
-        'labels': target_encodings['input_ids'],
+        'decoder_input_ids': target_encodings['input_ids'],
+        'decoder_attention_mask': target_encodings['attention_mask']
     }
 
     return encodings
@@ -40,22 +36,25 @@ def convert_to_features(example_batch, tokenizer):
 class SST2Loader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        self.tokenizer = config.tokenizer
+        if tokenizer is None:
+            self.tokenizer = T5Tokenizer.from_pretrained('t5-large')
+        else:
+            self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
-            0: "bad",
-            1: "great",
+            0: "negative",
+            1: "positive",
         }
 
     def convert_examples(self, example):
         if self.n_prompt_tokens > 0:  # use randomly selected words as initial prompt
             offset = 1000
             prompt = self.tokenizer.decode(list(range(offset, offset + self.n_prompt_tokens)))
-            example['input_text'] = '%s . %s . It was %s .' % (prompt, example['text'], self.tokenizer.mask_token)
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = 'text: %s %s . It was <extra_id_0> </s>' % (prompt, example['text'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         else:
-            example['input_text'] = '%s . It was %s .' % (example['text'], self.tokenizer.mask_token)
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = 'text: %s . It was <extra_id_0> </s>' % example['text']
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         return example
 
     def _load(self, split, seed) -> DataSet:
@@ -64,8 +63,7 @@ class SST2Loader(Loader):
         dataset = dataset.map(self.convert_examples, load_from_cache_file=False)
         print('Example in {} set:'.format(split))
         print(dataset[0])
-        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True,
-                              load_from_cache_file=False)
+        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True, load_from_cache_file=False)
         # Convert to fastNLP.DataSet
         ds = DataSet()
         for ins in dataset:
@@ -73,11 +71,12 @@ class SST2Loader(Loader):
                 example = {
                     "input_ids": ins["input_ids"],
                     "attention_mask": ins["attention_mask"],
-                    "mask_pos": ins["mask_pos"],
-                    "labels": ins["labels"][0],
+                    "decoder_input_ids": ins["decoder_input_ids"],
+                    "decoder_attention_mask": ins["decoder_attention_mask"],
+                    "labels": ins["decoder_input_ids"][2],
                 }
                 ds.append(Instance(**example))
-        ds.set_input("input_ids", "attention_mask", "mask_pos")
+        ds.set_input("input_ids", "attention_mask", "decoder_input_ids", "decoder_attention_mask")
         ds.set_target("labels")
         return ds
 
@@ -87,27 +86,31 @@ class SST2Loader(Loader):
         return data_bundle
 
 
+
 class SNLILoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        self.tokenizer = config.tokenizer
+        if tokenizer is None:
+            self.tokenizer = T5Tokenizer.from_pretrained('t5-large')
+        else:
+            self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
-            0: "Yes",
-            1: "Maybe",
-            2: "No",
+            0: "Entailment",
+            1: "Neutral",
+            2: "Contradiction",
         }
 
     def convert_examples(self, example):
         if self.n_prompt_tokens > 0:  # use randomly selected words as initial prompt
             offset = 1000
             prompt = self.tokenizer.decode(list(range(offset, offset + self.n_prompt_tokens)))
-            example['input_text'] = '%s . %s ? %s , %s' % (
-                prompt, example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s . %s ? <extra_id_0> , %s' % (prompt, example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         else:
-            example['input_text'] = '%s ? %s , %s' % (example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s ? <extra_id_0> , %s' % (example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
+
         return example
 
     def _load(self, split, seed) -> DataSet:
@@ -116,8 +119,7 @@ class SNLILoader(Loader):
         dataset = dataset.filter(lambda example: example['labels'] in [0, 1, 2])
         dataset = dataset.map(self.convert_examples, load_from_cache_file=False)
         print(dataset[0])
-        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True,
-                              load_from_cache_file=False)
+        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True, load_from_cache_file=False)
         # Convert to fastNLP.DataSet
         ds = DataSet()
         for ins in dataset:
@@ -125,11 +127,12 @@ class SNLILoader(Loader):
                 example = {
                     "input_ids": ins["input_ids"],
                     "attention_mask": ins["attention_mask"],
-                    "mask_pos": ins["mask_pos"],
-                    "labels": ins["labels"][0],
+                    "decoder_input_ids": ins["decoder_input_ids"],
+                    "decoder_attention_mask": ins["decoder_attention_mask"],
+                    "labels": ins["decoder_input_ids"][2],
                 }
                 ds.append(Instance(**example))
-        ds.set_input("input_ids", "attention_mask", "mask_pos")
+        ds.set_input("input_ids", "attention_mask", "decoder_input_ids", "decoder_attention_mask")
         ds.set_target("labels")
         return ds
 
@@ -142,7 +145,10 @@ class SNLILoader(Loader):
 class DBPediaLoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        self.tokenizer = config.tokenizer
+        if tokenizer is None:
+            self.tokenizer = T5Tokenizer.from_pretrained('t5-large')
+        else:
+            self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "Company",
@@ -165,11 +171,12 @@ class DBPediaLoader(Loader):
         if self.n_prompt_tokens > 0:  # use randomly selected words as initial prompt
             offset = 1000
             prompt = self.tokenizer.decode(list(range(offset, offset + self.n_prompt_tokens)))
-            example['input_text'] = '%s . %s . It was %s .' % (prompt, example['text'], self.tokenizer.mask_token)
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s [ Category: <extra_id_0> ] %s' % (prompt, example['text'].strip())
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         else:
-            example['input_text'] = '%s . It was %s .' % (example['text'], self.tokenizer.mask_token)
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '[ Category: <extra_id_0> ] %s' % (example['text'].strip())
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
+
         return example
 
     def _load(self, split, seed) -> DataSet:
@@ -177,8 +184,7 @@ class DBPediaLoader(Loader):
         dataset = load_hf_dataset(task_name='DBPedia', split=split, seed=seed)
         dataset = dataset.map(self.convert_examples, load_from_cache_file=False)
         print(dataset[0])
-        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True,
-                              load_from_cache_file=False)
+        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True, load_from_cache_file=False)
         # Convert to fastNLP.DataSet
         ds = DataSet()
         for ins in dataset:
@@ -186,11 +192,12 @@ class DBPediaLoader(Loader):
                 example = {
                     "input_ids": ins["input_ids"],
                     "attention_mask": ins["attention_mask"],
-                    "mask_pos": ins["mask_pos"],
-                    "labels": ins["labels"][0],
+                    "decoder_input_ids": ins["decoder_input_ids"],
+                    "decoder_attention_mask": ins["decoder_attention_mask"],
+                    "labels": ins["decoder_input_ids"][2],
                 }
                 ds.append(Instance(**example))
-        ds.set_input("input_ids", "attention_mask", "mask_pos")
+            ds.set_input("input_ids", "attention_mask", "decoder_input_ids", "decoder_attention_mask")
         ds.set_target("labels")
         return ds
 
@@ -203,23 +210,25 @@ class DBPediaLoader(Loader):
 class QNLILoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        self.tokenizer = config.tokenizer
+        if tokenizer is None:
+            self.tokenizer = T5Tokenizer.from_pretrained('t5-large')
+        else:
+            self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
-            0: "entailment",
-            1: "not_entailment",
+            0: "Entailment",
+            1: "NotEntailment",
         }
 
     def convert_examples(self, example):
         if self.n_prompt_tokens > 0:  # use randomly selected words as initial prompt
             offset = 1000
             prompt = self.tokenizer.decode(list(range(offset, offset + self.n_prompt_tokens)))
-            example['input_text'] = '%s . %s ? %s , %s' % (
-                prompt, example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s . %s ? <extra_id_0> , %s' % (prompt, example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         else:
-            example['input_text'] = '%s ? %s , %s' % (example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s ? <extra_id_0> , %s' % (example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         return example
 
     def _load(self, split, seed) -> DataSet:
@@ -227,8 +236,7 @@ class QNLILoader(Loader):
         dataset = load_hf_dataset(task_name='QNLI', split=split, seed=seed)
         dataset = dataset.map(self.convert_examples, load_from_cache_file=False)
         print(dataset[0])
-        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True,
-                              load_from_cache_file=False)
+        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True, load_from_cache_file=False)
         # Convert to fastNLP.DataSet
         ds = DataSet()
         for ins in dataset:
@@ -236,11 +244,12 @@ class QNLILoader(Loader):
                 example = {
                     "input_ids": ins["input_ids"],
                     "attention_mask": ins["attention_mask"],
-                    "mask_pos": ins["mask_pos"],
-                    "labels": ins["labels"][0],
+                    "decoder_input_ids": ins["decoder_input_ids"],
+                    "decoder_attention_mask": ins["decoder_attention_mask"],
+                    "labels": ins["decoder_input_ids"][2],
                 }
                 ds.append(Instance(**example))
-        ds.set_input("input_ids", "attention_mask", "mask_pos")
+            ds.set_input("input_ids", "attention_mask", "decoder_input_ids", "decoder_attention_mask")
         ds.set_target("labels")
         return ds
 
@@ -253,7 +262,10 @@ class QNLILoader(Loader):
 class QQPLoader(Loader):
     def __init__(self, tokenizer=None, n_prompt_tokens=50):
         super().__init__()
-        self.tokenizer = config.tokenizer
+        if tokenizer is None:
+            self.tokenizer = T5Tokenizer.from_pretrained('t5-large')
+        else:
+            self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
             0: "Yes",
@@ -264,12 +276,13 @@ class QQPLoader(Loader):
         if self.n_prompt_tokens > 0:  # use randomly selected words as initial prompt
             offset = 1000
             prompt = self.tokenizer.decode(list(range(offset, offset + self.n_prompt_tokens)))
-            example['input_text'] = '%s . %s ? %s , %s' % (
-                prompt, example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s . %s ? <extra_id_0> , %s' % (prompt, example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
         else:
-            example['input_text'] = '%s ? %s , %s' % (example['text1'], self.tokenizer.mask_token, example['text2'])
-            example['target_text'] = self.label2text[example['labels']]
+            example['input_text'] = '%s ? <extra_id_0> , %s' % (
+            example['text1'], example['text2'])
+            example['target_text'] = '<pad> <extra_id_0> %s </s>' % self.label2text[example['labels']]
+
         return example
 
     def _load(self, split, seed) -> DataSet:
@@ -277,8 +290,7 @@ class QQPLoader(Loader):
         dataset = load_hf_dataset(task_name='QQP', split=split, seed=seed)
         dataset = dataset.map(self.convert_examples, load_from_cache_file=False)
         print(dataset[0])
-        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True,
-                              load_from_cache_file=False)
+        dataset = dataset.map(partial(convert_to_features, tokenizer=self.tokenizer), batched=True, load_from_cache_file=False)
         # Convert to fastNLP.DataSet
         ds = DataSet()
         for ins in dataset:
@@ -286,11 +298,12 @@ class QQPLoader(Loader):
                 example = {
                     "input_ids": ins["input_ids"],
                     "attention_mask": ins["attention_mask"],
-                    "mask_pos": ins["mask_pos"],
-                    "labels": ins["labels"][0],
+                    "decoder_input_ids": ins["decoder_input_ids"],
+                    "decoder_attention_mask": ins["decoder_attention_mask"],
+                    "labels": ins["decoder_input_ids"][2],
                 }
                 ds.append(Instance(**example))
-        ds.set_input("input_ids", "attention_mask", "mask_pos")
+            ds.set_input("input_ids", "attention_mask", "decoder_input_ids", "decoder_attention_mask")
         ds.set_target("labels")
         return ds
 

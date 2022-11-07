@@ -16,87 +16,56 @@ tokenizer = config.tokenizer
 
 
 def sentence_fn_factory(task_name):
-    prompt_initialization = tokenizer.decode(list(range(1000, 1050)))
+    prompt_initialization = tokenizer.decode(list(range(1000, 1050))) + ' . '
+    # prompt_initialization = ""
     if task_name == 'SST-2':
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + f' . It was {config.mask_token} .'
+            return prompt_initialization + test_data + f' . It was {config.mask_token} .'
     elif task_name == 'SNLI':
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
+            return prompt_initialization + test_data + f' ? {config.mask_token} , ' + test_data
     elif task_name == 'DBPedia':
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + f' . It was {config.mask_token} .'
+            return prompt_initialization + test_data + f' . It was {config.mask_token} .'
     elif task_name == 'QNLI':
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
+            return prompt_initialization + test_data + f' ? {config.mask_token} , ' + test_data
     elif task_name == 'QQP':
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + f' ? {config.mask_token} , ' + test_data
+            return prompt_initialization + test_data + f' ? {config.mask_token} , ' + test_data
     else:
         raise NotImplementedError
 
     return sentence_fn
 
 
-verbalizer_dict = {
-    'SST-2': [
-        "bad",
-        "great"
-    ],
-    'SNLI': [
-        "Yes",
-        "Maybe",
-        "No"
-    ],
-    'DBPedia': [
-        "Company",
-        "EducationalInstitution",
-        "Artist",
-        "Athlete",
-        "OfficeHolder",
-        "MeanOfTransportation",
-        "Building",
-        "NaturalPlace",
-        "Village",
-        "Animal",
-        "Plant",
-        "Album",
-        "Film",
-        "WrittenWork"
-    ],
-    'QNLI': [
-        "entailment",
-        "not_entailment"
-    ],
-    'QQP': [
-        "Yes",
-        "No"
-    ],
-}
+device = 'cuda'
 
-device = 'cuda:0'
 
-for task_name in config.tasks.keys():
+# config.tasks.keys()
+for task_name in ["QNLI"]:
     # for seed in config.tasks[task_name]:
     for seed in [8]:
         torch.manual_seed(seed)
         np.random.seed(seed)
         sentence_fn = sentence_fn_factory(task_name)
         embedding_and_attention_mask_fn = lambda x, y: (x, y)
-
+        hidden_states_and_attention_mask_fn = lambda i, x, y: (x, y)
         predictions = torch.tensor([], device=device)
-        for res, _, _ in test_api(
+        prompt_embedding = torch.load(f"./results/{task_name}/8/best_prompt.pt")
+        for res in test_api(
                 sentence_fn=sentence_fn,
+                prompt_embedding=prompt_embedding,
                 embedding_and_attention_mask_fn=embedding_and_attention_mask_fn,
-                test_data_path=f'./test_datasets/{task_name}/encrypted.pth',
+                hidden_states_and_attention_mask_fn=hidden_states_and_attention_mask_fn,
+                test_data_path=f'./test_datasets/{task_name}/train/encrypted.pth',
                 task_name=task_name,
                 device=device
         ):
-            verbalizers = verbalizer_dict[task_name]
-            intrested_logits = [res[:, tokenizer.encode(verbalizer, add_special_tokens=False)[0]] for verbalizer in
-                                verbalizers]
+            print(res)
 
-            pred = torch.stack(intrested_logits).argmax(dim=0)
+            pred = res.argmax(dim=-1)
+            print(pred)
             predictions = torch.cat([predictions, pred])
 
         if not os.path.exists(f'./predictions/{task_name}'):

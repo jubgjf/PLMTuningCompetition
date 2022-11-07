@@ -3,6 +3,7 @@ import torch.nn as nn
 from fastNLP.core.metrics import MetricBase
 from fastNLP.core.utils import _get_func_signature
 from sklearn.metrics import accuracy_score
+from modeling_tokenizer import T5Tokenizer
 from utils import hinge_loss
 
 
@@ -25,7 +26,7 @@ class TaskMetric(MetricBase):
         if not isinstance(target, torch.Tensor):
             raise TypeError(f"`target` in {_get_func_signature(self.evaluate)} must be torch.Tensor,"
                             f"got {type(target)}.")
-        # pred: batch_size x seq_len x vocab_size
+            # pred: batch_size x seq_len x vocab_size
         self.ce_loss += self.ce_fct(pred, target).item()
 
         # calculate hinge loss
@@ -60,19 +61,24 @@ class TaskMetric(MetricBase):
 class SST2Metric(TaskMetric):
     def __init__(self, pred=None, target=None, seq_len=None, tokenizer=None):
         super(SST2Metric, self).__init__(pred, target, seq_len, tokenizer)
+        if tokenizer is None:
+            tokenizer = T5Tokenizer.from_pretrained('t5-large')
         self.label_map = {
-            tokenizer.encode('bad', add_special_tokens=False)[0]: 0,  # negative
-            tokenizer.encode('great', add_special_tokens=False)[0]: 1,  # positive
+            tokenizer.encode('negative', add_special_tokens=False)[0]: 0,  # negative
+            tokenizer.encode('positive', add_special_tokens=False)[0]: 1,  # positive
         }
 
 
 class SNLIMetric(TaskMetric):
     def __init__(self, pred=None, target=None, seq_len=None, tokenizer=None):
         super(SNLIMetric, self).__init__(pred, target, seq_len, tokenizer)
+
+        if tokenizer is None:
+            tokenizer = T5Tokenizer.from_pretrained('t5-large')
         self.label_map = {
-            tokenizer.encode('Yes', add_special_tokens=False)[0]: 0,
-            tokenizer.encode('Maybe', add_special_tokens=False)[0]: 1,
-            tokenizer.encode('No', add_special_tokens=False)[0]: 2,
+            tokenizer.encode('Entailment', add_special_tokens=False)[0]: 0,
+            tokenizer.encode('Neutral', add_special_tokens=False)[0]: 1,
+            tokenizer.encode('Contradiction', add_special_tokens=False)[0]: 2,
         }
 
 
@@ -100,15 +106,19 @@ class DBPediaMetric(TaskMetric):
 class QNLIMetric(TaskMetric):
     def __init__(self, pred=None, target=None, seq_len=None, tokenizer=None):
         super(QNLIMetric, self).__init__(pred, target, seq_len, tokenizer)
+        if tokenizer is None:
+            tokenizer = T5Tokenizer.from_pretrained('t5-large')
         self.label_map = {
-            tokenizer.encode('entailment', add_special_tokens=False)[0]: 0,
-            tokenizer.encode('not_entailment', add_special_tokens=False)[0]: 1,
+            tokenizer.encode('Entailment', add_special_tokens=False)[0]: 0,
+            tokenizer.encode('NotEntailment', add_special_tokens=False)[0]: 1,
         }
 
 
 class QQPMetric(TaskMetric):
     def __init__(self, pred=None, target=None, seq_len=None, tokenizer=None):
         super(QQPMetric, self).__init__(pred, target, seq_len, tokenizer)
+        if tokenizer is None:
+            tokenizer = T5Tokenizer.from_pretrained('t5-large')
         self.label_map = {
             tokenizer.encode('Yes', add_special_tokens=False)[0]: 0,
             tokenizer.encode('No', add_special_tokens=False)[0]: 1,
