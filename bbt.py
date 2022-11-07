@@ -26,8 +26,8 @@ from transformers import (
     BartConfig as CPTConfig,
 )
 from models.modeling_roberta import RobertaForMaskedLM
-from dataloader import SST2Loader, AGNewsLoader, YelpPLoader, MRPCLoader, SNLILoader, TRECLoader
-from metrics import SST2Metric, AGNewsMetric, YelpPMetric, MRPCMetric, SNLIMetric, TRECMetric
+from dataloader import SST2Loader, SNLILoader, QNLILoader, QQPLoader, DBPediaLoader
+from metrics import SST2Metric, SNLIMetric, QNLIMetric, QQPMetric, DBPediaMetric
 from utils import hinge_loss
 from sklearn.metrics import f1_score
 
@@ -131,7 +131,8 @@ torch.manual_seed(seed)
 
 
 class LMForwardAPI:
-    def __init__(self, model_name='roberta-large', n_prompt_tokens=50, task_name='sst2', loss_type='hinge', init_prompt_path=None):
+    def __init__(self, model_name='roberta-large', n_prompt_tokens=50, task_name='sst2', loss_type='hinge',
+                 init_prompt_path=None):
         if model_name in ['roberta-large']:
             self.config = RobertaConfig.from_pretrained(model_name)
             self.tokenizer = RobertaTokenizer.from_pretrained(model_name)
@@ -199,28 +200,24 @@ class LMForwardAPI:
         #     os.makedirs(save_path, exist_ok=True)
         if task_name == 'sst2':
             self.metric = SST2Metric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
+            self.metric_key = 'f1'
             self.metric_name = 'SST2Metric'
-        elif task_name == 'agnews':
-            self.metric = AGNewsMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
-            self.metric_name = 'AGNewsMetric'
-        elif task_name == 'yelpp':
-            self.metric = YelpPMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
-            self.metric_name = 'YelpPMetric'
-        elif task_name == 'mrpc':
-            self.metric = MRPCMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
-            self.metric_name = 'MRPCMetric'
+        elif task_name == 'qnli':
+            self.metric = QNLIMetric(target='labels', pred='logits', tokenizer=tokenizer)
+            self.metric_key = 'f1'
+            self.metric_name = 'QNLIMetric'
+        elif task_name == 'qqp':
+            self.metric = QQPMetric(target='labels', pred='logits', tokenizer=tokenizer)
+            self.metric_key = 'f1'
+            self.metric_name = 'QQPMetric'
         elif task_name == 'snli':
             self.metric = SNLIMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
+            self.metric_key = 'f1'
             self.metric_name = 'SNLIMetric'
-        elif task_name == 'trec':
-            self.metric = TRECMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'acc'
-            self.metric_name = 'TRECMetric'
+        elif task_name == 'dbpedia':
+            self.metric = DBPediaMetric(target='labels', pred='logits', tokenizer=tokenizer)
+            self.metric_key = 'f1'
+            self.metric_name = 'DBPediaMetric'
         else:
             raise NotImplementedError
         self.margin = self.metric.margin
@@ -398,21 +395,19 @@ class LMForwardAPI:
                 return loss
 
 
-
 tokenizer = RobertaTokenizer.from_pretrained(model_name)
 
 cache_fn = f"caches/data_{model_name.replace('/', '-')}_{task_name}_{n_prompt_tokens}_{seed}.pt"
 DataLoader = {
     'sst2': SST2Loader,
-    'agnews': AGNewsLoader,
-    'yelpp': YelpPLoader,
-    'mrpc': MRPCLoader,
+    'qnli': QNLILoader,
+    'qqp': QQPLoader,
     'snli': SNLILoader,
-    'trec': TRECLoader
+    'dbpedia': DBPediaLoader
 }
 
-
-data_bundle = DataLoader[task_name](tokenizer=tokenizer, n_prompt_tokens=n_prompt_tokens).my_load(['train', 'dev'], seed)
+data_bundle = DataLoader[task_name](tokenizer=tokenizer, n_prompt_tokens=n_prompt_tokens).my_load(['train', 'dev'],
+                                                                                                  seed)
 
 train_data, dev_data = data_bundle.get_dataset('train'), data_bundle.get_dataset('dev')
 
@@ -425,7 +420,6 @@ print(train_data[0])
 print('\n# of dev data: {}'.format(len(dev_data)))
 print('Example:')
 print(dev_data[0])
-
 
 train_data = {
     'input_ids': torch.tensor(train_data['input_ids'].get(list(range(len(train_data))))),
@@ -483,7 +477,7 @@ print('Done. Elapsed time: {} (mins)'.format((end_time - start_time) / 60))
 if not os.path.exists(f'./results/{task_name}/{seed}'):
     os.makedirs(f'./results/{task_name}/{seed}')
 
-
-torch.save(model_forward_api.linear(torch.tensor(model_forward_api.best_prompt, dtype=torch.float32)), f=f'./results/{task_name}/{seed}/best.pt')
+torch.save(model_forward_api.linear(torch.tensor(model_forward_api.best_prompt, dtype=torch.float32)),
+           f=f'./results/{task_name}/{seed}/best.pt')
 
 # fitlog.finish()
