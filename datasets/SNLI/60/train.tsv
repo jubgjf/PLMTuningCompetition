@@ -1,48 +1,48 @@
-A woman in a brownish-orange sweater is sitting by a lake.	A woman is knitting a sweater by the lake.	Contradiction
-Three dark kids on a water tricycle.	Two children are playing on the beach.	Contradiction
-Young person sitting in the doorway of a house with a water hand pump in front of the house.	The young person is sitting down.	Entailment
-The dark-skinned man is laying in a doorway next to a metal pipe.	The man is next to a pipe.	Entailment
-A business event is taking place with an attractive blond woman smiling at the camera with her phone in her hand.	The woman is proud to have won the "Salesperson of the Year" award.	Neutral
-A man sitting at a small outdoor table is conversing on his cellphone while working on his laptop.	A man is using a laptop.	Entailment
-A young child is playing in a water tank with toys.	A child is playing in water.	Entailment
-A man in a light blue t-shirt is walking carefully on a platform.	This man is walking	Entailment
-A man hammers plywood on a roof.	A man with a hammer is on the ground	Contradiction
-A lady is standing in the sun holding an umbrella.	The lady is standing outside in the sun with her umbrella.	Entailment
-Several adults are filling their cups and a drink machine.	People fill their cups from a fresh mountain spring.	Contradiction
-A man and a boy engage in a game of Ping-Pong.	Two people play ping pong.	Entailment
-Four guys are in a field playing Frisbee.	they are playing on teams	Neutral
-A little boy in a green shirt is attempting to brush his sister's hair while she pulls away.	A young boy is brushing his sister's hair but she doesn't want him to.	Neutral
-A man and a woman sit on wicker couches in a large white room.	There is a man and woman sitting on couches.	Entailment
-A young couple showing affection in front of a beer advertisement.	The couple is white	Neutral
-A group of people picnic on a grassy hill near the ocean.	A family eat a meal together at the beach.	Neutral
-Six bicyclists are competing in a race, and several of them seem to be about to fall over.	Six bicyclist search for new bicycles inside of a Walmart.	Contradiction
-A bicyclist in a helmet and a man in a business suit both talk on cellphones near a fountain.	A bicyclist talks on a cellphone near a fountain because his boss wonders why he isn't at work.	Neutral
-Two adorable children who were dressed very similar by their mother are enjoying a train ride.	the two boys always dessed very differently from each other	Contradiction
-The boy in the green shirt is playing the xylophone outside.	A boy tries to raise money for his family by playing the xylophone	Neutral
-A worker is working in an elevator.	A man is working on the ceiling of an elevator.	Neutral
-One man standing in a clearing attempting to pull an object by a rope.	A man sits in a chair in the yard drinking a beer.	Contradiction
-A woman and child look at a window box filled with herbs.	A mom and her child play on a slide.	Contradiction
-A large group of people standing beside a fire engine looking across the street while two police officers look on.	the people are sitting on the rope	Contradiction
-A boy in a robe sits in a chair.	the boy is sitting	Entailment
-The hikers climb the staircase in the woods.	There is a staircase in the woods.	Entailment
-2 men in hiking gear descend down a stone staircase.	2 people in hiking gear descend down a stone staircase.	Entailment
-Woman weaves while young girl sits nearby with colorful weaving all around them.	The woman is weaving.	Entailment
-four women dancing at a party.	Four women are serving drinks at a party.	Contradiction
-There are five young boys on a soccer field running and playing soccer.	Three girls play musical instruments.	Contradiction
-A man wearing a blue shirt is holding his arm out towards a shark.	A man is eating shark meat.	Contradiction
-Three construction workers are mending pavement.	Three construction workers are mending pavement damage from a car accident.	Neutral
-Two dogs, that are tied to the building, patiently wait for their master to return.	a person jumps	Contradiction
-A woman climbs up a tree.	A woman is outside	Entailment
-A woman makes faces at a small child.	A women mimics a child.	Neutral
-3 men in red and blue uniforms playing with a yellow ball on a field.	Men in uniforms are playing on the field.	Entailment
-Person in gray jacket and blue pants balancing board on handrail	A person balancing a board on a handrail.	Entailment
-Two adults on cellphones downtown.	Two people are playing chess.	Contradiction
-A skateboarder doing a jump.	A person is in the air.	Entailment
-A crowd watching a street performer and two small children.	two children and a man perform for a crowd	Neutral
-A man slumped on the ground under a building overhang.	A man is walking along the street.	Contradiction
-a man stands next to a bus.	A woman is standing next to a imaginary bus.	Contradiction
-A brown dog is bending down trying to drink from a jet of water.	A dog is gleefully drinking water.	Neutral
-Two girls on separate teams fighting for a soccer ball.	kids are playing in a soccer tournament	Neutral
-A girl in pink slides down the slide at a playground.	A girl is sliding down the slide in the rain.	Neutral
-The picture takes place inside a large, commercial kitchen where people are making what looks like bread.	The people making bread are asian.	Neutral
-A dark-haired man standing up singing and a man in a brown hat sitting playing guitar.	A band is playing music.	Neutral
+A little girl outside playing .	The girl sick in bed .	Contradiction
+Red wall filled with graffiti .	The wall is colorful	Entailment
+Phone line workers doing repairs .	the workers are sleeping	Contradiction
+Two young girls dressed formally	Two girls dressed up .	Entailment
+Two ladies looking overboard .	Two ladies looking down .	Entailment
+Four musicians perform on stage .	People are on stage .	Entailment
+Two people are riding along the side of the road on bicycles , the one in front is wearing a helmet .	Two people are riding along the side of the road on blue bicycles , the one in front is wearing a green helmet .	Neutral
+The red lines are slanted .	There are red lines .	Entailment
+Two men wearing glasses , talking .	Two men are talking .	Entailment
+A man with eyes shut holds a glass of beer while another man in a gray sweater looks away in the background .	A doctor closing his eyes in an attempt to hold back his tears , clutching a beer in one hand , while his patient looks away anticipating his diagnosis .	Neutral
+A man reading the paper waiting to get on subway .	A man catches up on the headlines before going to work .	Neutral
+People roaming the street .	There are people outside today .	Entailment
+Two Rubbish men standing on their truck loading trash .	Two Rubbish men look for food in the trash .	Contradiction
+A woman is washing dishes .	A woman washes her car .	Contradiction
+A woman in a brown jacket passes by a column with an advertisement pasted on it , featuring red lettering and a person 's face .	A woman wearing a brown jacket passing a column with a makeup advertisement on it with red lettering and a picture of a woman 's face .	Neutral
+a dog shakes dry .	A cat shakes dry .	Contradiction
+A skateboarder doing a jump .	The skateboarder is jumping .	Entailment
+girl kicking high in uniform	A girl in uniform .	Entailment
+a woman is receiving help from the female behind the counter .	A woman getting help from another woman at a store .	Entailment
+A woman smiling while stretching .	She is going to sleep	Contradiction
+A young girl going home on a bicycle after having lunch with her school mate in a nearby restaurant	A girl rides her bike to the library before going home from a luch date with her friend .	Neutral
+The lead singer from a band is holding a microphone and both hands up in the air against a purple background .	The lead singer is singing `` Purple Haze '' while the band plays guitars and drums at a rock festival .	Neutral
+A guy on a city electric pole watching over .	The man on the telephone pole is taking a nap .	Contradiction
+Family preparing for the wedding .	humans at a wedding	Entailment
+A soccer game at sunset	A soccer game at noon .	Contradiction
+A black dog running .	A canine is moving .	Entailment
+Two boxers exchanging punches .	Two men are fighting	Entailment
+A soldier apprehending a suspect .	not watched at alll	Contradiction
+Two people in official type clothing each riding on a dark horse , down an area surrounded by trees with a man in the background holding a gun .	Two cops riding dark horses , down a dark lit tree surrounded road , with a criminal in the background holding a gun preparing to shoot them .	Neutral
+A man in a black shirt about to blow out candles on a cake , one of the candles looking like a flare .	A man in a black shirt about to blow out candles on a chocolate cake , one of the candles looking like a flare .	Neutral
+A man stuffs a fowl from ingredients in a blue bowl .	a man stuffs a fowl from the blue bowl	Entailment
+A man in white swimming trunks rides a wind sail .	The man is crossing the lake using a wind sail .	Neutral
+A hiker dressed in a t-shirt and shorts rests and admires the orange and red sands surrounding him in the desert .	A desert orange and res sands surroundings is being admired by a hiker wearing a t-shirt and shorts	Neutral
+A young girl folds towels .	A young boy smiles .	Contradiction
+A guy with afro hair , gray sweater and jeans , skating on a skating ramp high up on the side touching grass .	A guy with afro hair , gray sweater and jeans , skating on a skating ramp high up on the side touching tall , green grass .	Neutral
+A bicyclist in a helmet and a man in a business suit both talk on cellphones near a fountain .	A bicyclist talks on a cellphone near a fountain because his boss wonders why he is n't at work .	Neutral
+A couple relax and chat on a park bench while enjoying a scenic fall view of the landscape , framed by the trunks of trees .	A couple is laughing while sitting on a park bench while enjoying a fall view of the landscape , framed by the trunks of tress .	Neutral
+Skiiers on snow cappedhills	Skiiers are doing jumping jacks .	Contradiction
+A child in a swing .	The child is running around .	Contradiction
+goat eating from someones hand .	the goat is dead	Contradiction
+A man , which is in his kitchen , beats a batter inside a bowl beside empty pans and a spatula .	A man , which is in his kitchen , beats a cake batter inside a bowl beside empty pans and a spatula .	Neutral
+A man eats food on a table in front of a small food shop on the street while a passerby walks by .	A man eats his dinner at a small restaurant because he did n't feel like cooking that night .	Neutral
+Man rides surfboard through water .	A man is sleeping .	Contradiction
+Two young girls dressed formally	Two boys in a house .	Contradiction
+A dog pulling a rope .	The dog dragging a fish .	Contradiction
+People are walking towards cameramen .	People are being filmed .	Entailment
+Three people singing together .	A group singing	Entailment
+A man smiling while pointing his finger and he 's holding boxes in his hand , and beds over his arm .	A man pointing at where he wants movers to take his things as he works his way to his new apartment carrying boxes and a bed .	Neutral
