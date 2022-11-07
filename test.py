@@ -21,26 +21,25 @@ tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
 
 def sentence_fn_factory(task_name):
     prompt_initialization = tokenizer.decode(list(range(1000, 1050)))
-    if task_name in ['MRPC', 'SNLI']:
+    if task_name in ['QQP', 'QNLI','SNLI']:
         def sentence_fn(test_data):
             return prompt_initialization + ' . ' + test_data + ' ? <mask> , ' + test_data
 
-    elif task_name == 'SST-2':
+    elif task_name in ['DBPedia','SST-2']:
         def sentence_fn(test_data):
             return prompt_initialization + ' . ' + test_data + ' . It was <mask> .'
 
-    elif task_name == 'AGNews':
-        def sentence_fn(test_data):
-            return prompt_initialization + ' . <mask> News: ' + test_data
-
-    elif task_name == 'TREC':
-        def sentence_fn(test_data):
-            return prompt_initialization + ' . <mask> question:' + test_data
-
-    elif task_name == 'Yelp':
-        def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + ' .It was <mask> .'
-
+    # elif task_name == 'AGNews':
+    #     def sentence_fn(test_data):
+    #         return prompt_initialization + ' . <mask> News: ' + test_data
+    #
+    # elif task_name == 'TREC':
+    #     def sentence_fn(test_data):
+    #         return prompt_initialization + ' . <mask> question:' + test_data
+    #
+    # elif task_name == 'Yelp':
+    #     def sentence_fn(test_data):
+    #         return prompt_initialization + ' . ' + test_data + ' .It was <mask> .'
     else:
         raise ValueError
 
@@ -48,18 +47,36 @@ def sentence_fn_factory(task_name):
 
 verbalizer_dict = {
     'SNLI': ["Yes", "Maybe", "No"],
-    'MRPC': ["No", "Yes"],
+    #'MRPC': ["No", "Yes"],
     'SST-2': ["bad", "great"],
-    'AGNews': ["World", "Sports", "Business", "Tech"],
-    'TREC': ["description", "entity", "abbreviation", "human", "numeric", "location"],
-    'Yelp': ["bad", "great"]
+    #'AGNews': ["World", "Sports", "Business", "Tech"],
+    #'TREC': ["description", "entity", "abbreviation", "human", "numeric", "location"],
+    #'Yelp': ["bad", "great"]
+    'DBPedia':[ "Company",
+            "EducationalInstitution",
+            "Artist",
+            "Athlete",
+            "OfficeHolder",
+            "MeanOfTransportation",
+            "Building",
+            "NaturalPlace",
+            "Village",
+            "Animal",
+            "Plant",
+            "Album",
+            "Film",
+            "WrittenWork",],
+    'QNLI':["Entailment",
+            "NotEntailment"],
+    'QQP':["Yes",
+            "No"]
 }
 
 
 device = 'cuda:0'
 
 
-for task_name in ['SNLI', 'SST-2', 'MRPC', 'AGNews', 'Yelp', 'TREC']:
+for task_name in ['QQP', 'QNLI','SNLI','DBPedia','SST-2']:
     for seed in [8, 13, 42, 50, 60]:
         torch.manual_seed(seed)
         np.random.seed(seed)
