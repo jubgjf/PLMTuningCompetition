@@ -200,23 +200,23 @@ class LMForwardAPI:
         #     os.makedirs(save_path, exist_ok=True)
         if task_name == 'sst2':
             self.metric = SST2Metric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'f1'
+            self.metric_key = 'acc'
             self.metric_name = 'SST2Metric'
         elif task_name == 'qnli':
             self.metric = QNLIMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'f1'
+            self.metric_key = 'acc'
             self.metric_name = 'QNLIMetric'
         elif task_name == 'qqp':
             self.metric = QQPMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'f1'
+            self.metric_key = 'acc'
             self.metric_name = 'QQPMetric'
         elif task_name == 'snli':
             self.metric = SNLIMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'f1'
+            self.metric_key = 'acc'
             self.metric_name = 'SNLIMetric'
         elif task_name == 'dbpedia':
             self.metric = DBPediaMetric(target='labels', pred='logits', tokenizer=tokenizer)
-            self.metric_key = 'f1'
+            self.metric_key = 'acc'
             self.metric_name = 'DBPediaMetric'
         else:
             raise NotImplementedError
