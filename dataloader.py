@@ -218,9 +218,9 @@ class SNLILoader(Loader):
             self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
-            0: "Entailment",
-            1: "Neutral",
-            2: "Contradiction",
+            0: "Yes",
+            1: "Maybe",
+            2: "No",
         }
 
     def convert_examples(self, example):
@@ -273,8 +273,8 @@ class QNLILoader(Loader):
             self.tokenizer = tokenizer
         self.n_prompt_tokens = n_prompt_tokens
         self.label2text = {
-            0: "Entailment",
-            1: "NotEntailment",
+            0: "Yes",
+            1: "No",
         }
 
     def convert_examples(self, example):

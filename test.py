@@ -45,23 +45,25 @@ def sentence_fn_factory(task_name):
 
 # %s . %s News: %s
 verbalizer_dict = {
-    'SNLI': ["Entailment", "Neutral", "Contradiction"],
+    'SNLI': ["Yes", "Maybe", "No"],
     'SST-2': ["bad", "great"],
-    'DBPedia': ["Company",
-                "EducationalInstitution",
-                "Artist",
-                "Athlete",
-                "OfficeHolder",
-                "MeanOfTransportation",
-                "Building",
-                "NaturalPlace",
-                "Village",
-                "Animal",
-                "Plant",
-                "Album",
-                "Film",
-                "WrittenWork", ],
-    'QNLI': ["Entailment", "NotEntailment"],
+    'DBPedia': [
+        "Company",
+        "EducationalInstitution",
+        "Artist",
+        "Athlete",
+        "OfficeHolder",
+        "MeanOfTransportation",
+        "Building",
+        "NaturalPlace",
+        "Village",
+        "Animal",
+        "Plant",
+        "Album",
+        "Film",
+        "WrittenWork"
+    ],
+    'QNLI': ["No", "Yes"],
     'QQP': ["No", "Yes"]
 }
 

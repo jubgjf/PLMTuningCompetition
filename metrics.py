@@ -256,8 +256,7 @@ class QNLIMetric(MetricBase):
             tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
         self.label_map = {
             tokenizer.encode('Yes', add_special_tokens=False)[0]: 0,
-            tokenizer.encode('Maybe', add_special_tokens=False)[0]: 1,
-            tokenizer.encode('No', add_special_tokens=False)[0]: 2,
+            tokenizer.encode('No', add_special_tokens=False)[0]: 1,
         }
 
     def evaluate(self, pred, target, seq_len=None):
