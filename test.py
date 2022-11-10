@@ -4,16 +4,21 @@ Shallow version
 We train one prompt after embedding layer, so we use sentence_fn and embedding_and_attention_mask_fn.
 Baseline code is in bbt.py
 """
+seed = 8
 
 import os
 import torch
 from test_api import test_api
 from test_api import RobertaEmbeddings
 from transformers import RobertaConfig, RobertaTokenizer
-from models.modeling_roberta import RobertaModel
+# from models.modeling_roberta import RobertaModel
 import numpy as np
 import csv
+import random
 
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
 tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
 
 
@@ -21,18 +26,26 @@ def sentence_fn_factory(task_name):
     prompt_initialization = tokenizer.decode(list(range(1000, 1050)))
     if task_name in ['QQP', 'QNLI', 'SNLI']:
         def sentence_fn(test_data):
-            return prompt_initialization + ' . ' + test_data + ' ? <mask> , ' + test_data
-    elif task_name in ['DBPedia', 'SST-2']:
+            return "%s . %s ? %s , %s" % (prompt_initialization, test_data, tokenizer.mask_token, test_data)
+            # return prompt_initialization + ' . ' + test_data + ' ? <mask> , ' + test_data
+    elif task_name in ['SST-2']:
         def sentence_fn(test_data):
             return prompt_initialization + ' . ' + test_data + ' . It was <mask> .'
+    elif task_name in ['DBPedia']:
+        def sentence_fn(test_data):
+            return '%s . %s News: %s' % (prompt_initialization, tokenizer.mask_token, test_data)
     else:
         raise ValueError
 
     return sentence_fn
 
 
+# %s . %s . It was %s .
+
+
+# %s . %s News: %s
 verbalizer_dict = {
-    'SNLI': ["Yes", "Maybe", "No"],
+    'SNLI': ["Entailment", "Neutral", "Contradiction"],
     'SST-2': ["bad", "great"],
     'DBPedia': ["Company",
                 "EducationalInstitution",
@@ -48,19 +61,18 @@ verbalizer_dict = {
                 "Album",
                 "Film",
                 "WrittenWork", ],
-    'QNLI': ["Entailment",
-             "NotEntailment"],
-    'QQP': ["Yes",
-            "No"]
+    'QNLI': ["Entailment", "NotEntailment"],
+    'QQP': ["No", "Yes"]
 }
 
-device = 'cuda'
+device = 'cpu'
 
-for task_name in ['QQP', 'QNLI', 'SNLI', 'DBPedia', 'SST-2']:
+for task_name in ['QQP','SST-2','DBPedia']:
+#for task_name in verbalizer_dict.keys():
     for seed in [8]:
         torch.manual_seed(seed)
         np.random.seed(seed)
-        best = torch.load(f'./results/{task_name}/{seed}/best.pt').to(device).view(50, -1)
+        best = torch.load(f'./results/{task_name}/{seed}/best.pt', map_location='cpu').to(device).view(50, -1)
 
         sentence_fn = sentence_fn_factory(task_name)
 
